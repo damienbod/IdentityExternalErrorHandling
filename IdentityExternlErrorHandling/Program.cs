@@ -1,4 +1,5 @@
 using IdentityExternalErrorHandling.Data;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Identity;
@@ -41,6 +42,7 @@ public class Program
             oidcOptions.ClientSecret = builder.Configuration["AzureAd:ClientSecret"];
             oidcOptions.ResponseType = OpenIdConnectResponseType.Code;
             oidcOptions.UsePkce = true;
+            
             oidcOptions.MapInboundClaims = false;
             oidcOptions.SaveTokens = true;
             oidcOptions.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Name;
@@ -49,8 +51,16 @@ public class Program
             oidcOptions.Events = new OpenIdConnectEvents
             {
                 // Add event handlers
+                OnTicketReceived = async context =>
+                {
+                    var idToken = context.Properties!.GetTokenValue("id_token");
+                    var accessToken = context.Properties!.GetTokenValue("access_token");
+
+                    await Task.CompletedTask;
+                },
                 OnRedirectToIdentityProvider = async context =>
                 {
+                    //context.ProtocolMessage.AcrValues = "p2";
                     //context.ProtocolMessage.State = "fail";
                     await Task.CompletedTask;
                 },
