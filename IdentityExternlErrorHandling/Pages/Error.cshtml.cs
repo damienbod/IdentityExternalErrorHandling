@@ -19,7 +19,7 @@ public class ErrorModel : PageModel
         _logger = logger;
     }
 
-    public void OnGet()
+    public void OnGet(string? remoteError)
     {
         RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
     }

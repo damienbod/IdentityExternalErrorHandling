@@ -25,10 +25,16 @@ public class Program
 
         builder.Services.AddRazorPages();
 
-        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+        // Identity.External
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+            options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+            options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+        })
         .AddOpenIdConnect("EntraID", "EntraID", oidcOptions =>
         {
-            oidcOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            oidcOptions.SignInScheme = IdentityConstants.ExternalScheme;
             oidcOptions.Scope.Add(OpenIdConnectScope.OpenIdProfile);
             oidcOptions.Scope.Add("user.read");
             oidcOptions.Scope.Add(OpenIdConnectScope.OfflineAccess);
