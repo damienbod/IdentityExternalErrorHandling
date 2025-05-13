@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -33,51 +34,59 @@ public class Program
             options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
             options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
         })
-        //.AddOpenIdConnect("EntraID", "EntraID", oidcOptions =>
-        //{
-        //    oidcOptions.SignInScheme = IdentityConstants.ExternalScheme;
-        //    oidcOptions.Scope.Add("user.read");
-        //    oidcOptions.Authority = $"https://login.microsoftonline.com/{builder.Configuration["AzureAd:TenantId"]}/v2.0/";
-        //    oidcOptions.ClientId = builder.Configuration["AzureAd:ClientId"];
-        //    oidcOptions.ClientSecret = builder.Configuration["AzureAd:ClientSecret"];
-        //    oidcOptions.ResponseType = OpenIdConnectResponseType.Code;
-        //    oidcOptions.UsePkce = true;
+        .AddOpenIdConnect("EntraID", "EntraID", oidcOptions =>
+        {
+            oidcOptions.SignInScheme = IdentityConstants.ExternalScheme;
+            oidcOptions.SignOutScheme = IdentityConstants.ApplicationScheme;
+
+            oidcOptions.Scope.Add("user.read");
+            oidcOptions.Authority = $"https://login.microsoftonline.com/{builder.Configuration["AzureAd:TenantId"]}/v2.0/";
+            oidcOptions.ClientId = builder.Configuration["AzureAd:ClientId"];
+            oidcOptions.ClientSecret = builder.Configuration["AzureAd:ClientSecret"];
+            oidcOptions.ResponseType = OpenIdConnectResponseType.Code;
+            oidcOptions.UsePkce = true;
             
-        //    oidcOptions.MapInboundClaims = false;
-        //    oidcOptions.SaveTokens = true;
-        //    oidcOptions.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Name;
-        //    oidcOptions.TokenValidationParameters.RoleClaimType = "role";
+            oidcOptions.MapInboundClaims = false;
+            oidcOptions.SaveTokens = true;
+            oidcOptions.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Name;
+            oidcOptions.TokenValidationParameters.RoleClaimType = "role";
 
-        //    oidcOptions.Events = new OpenIdConnectEvents
-        //    {
-        //        // Add event handlers
-        //        OnTicketReceived = async context =>
-        //        {
-        //            var idToken = context.Properties!.GetTokenValue("id_token");
-        //            var accessToken = context.Properties!.GetTokenValue("access_token");
+            oidcOptions.Events = new OpenIdConnectEvents
+            {
+                // Add event handlers
+                OnTicketReceived = async context =>
+                {
+                    var idToken = context.Properties!.GetTokenValue("id_token");
+                    var accessToken = context.Properties!.GetTokenValue("access_token");
 
-        //            await Task.CompletedTask;
-        //        },
-        //        OnRedirectToIdentityProvider = async context =>
-        //        {
-        //            //context.ProtocolMessage.AcrValues = "p2";
-        //            //context.ProtocolMessage.State = "fail";
-        //            await Task.CompletedTask;
-        //        },
-        //        OnMessageReceived = async context =>
-        //        {
-        //            if (!string.IsNullOrEmpty(context.ProtocolMessage.Error))
-        //            {
-        //                context.HandleResponse();
-        //                context.Response.Redirect($"/Error?remoteError={context.ProtocolMessage.Error}");
-        //            }
+                    await Task.CompletedTask;
+                },
+                OnRedirectToIdentityProvider = async context =>
+                {
+                    //context.ProtocolMessage.AcrValues = "p2";
+                    //context.ProtocolMessage.State = "fail";
+                    await Task.CompletedTask;
+                },
+                OnMessageReceived = async context =>
+                {
+                    if (!string.IsNullOrEmpty(context.ProtocolMessage.Error))
+                    {
+                        context.HandleResponse();
+                        context.Response.Redirect($"/Error?remoteError={context.ProtocolMessage.Error}");
+                    }
 
-        //            await Task.CompletedTask;
-        //        }
-        //    };
-        //})
+                    await Task.CompletedTask;
+                }
+            };
+        })
         .AddOpenIdConnect("Auth0", "Auth0", options =>
         {
+            options.SignInScheme = IdentityConstants.ExternalScheme;
+            options.SignOutScheme = IdentityConstants.ApplicationScheme;
+            options.CallbackPath = new PathString("/signin-oidc-auth0");
+            options.RemoteSignOutPath = new PathString("/signout-callback-oidc-auth0");
+            options.SignedOutCallbackPath = new PathString("/signout-oidc-auth0");
+
             options.Authority = $"https://{builder.Configuration["Auth0:Domain"]}";
             options.ClientId = builder.Configuration["Auth0:ClientId"];
             options.ClientSecret = builder.Configuration["Auth0:ClientSecret"];
@@ -87,7 +96,6 @@ public class Program
             options.Scope.Add("profile");
             options.Scope.Add("email");
             options.Scope.Add("auth0-user-api-one");
-            // options.CallbackPath = new PathString("/signin-oidc");
             options.ClaimsIssuer = "Auth0";
             options.SaveTokens = true;
             options.UsePkce = true;
