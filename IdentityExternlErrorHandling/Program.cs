@@ -35,13 +35,12 @@ public class Program
         .AddOpenIdConnect("EntraID", "EntraID", oidcOptions =>
         {
             oidcOptions.SignInScheme = IdentityConstants.ExternalScheme;
-            oidcOptions.Scope.Add(OpenIdConnectScope.OpenIdProfile);
             oidcOptions.Scope.Add("user.read");
-            oidcOptions.Scope.Add(OpenIdConnectScope.OfflineAccess);
             oidcOptions.Authority = $"https://login.microsoftonline.com/{builder.Configuration["AzureAd:TenantId"]}/v2.0/";
             oidcOptions.ClientId = builder.Configuration["AzureAd:ClientId"];
             oidcOptions.ClientSecret = builder.Configuration["AzureAd:ClientSecret"];
             oidcOptions.ResponseType = OpenIdConnectResponseType.Code;
+            oidcOptions.UsePkce = true;
             oidcOptions.MapInboundClaims = false;
             oidcOptions.SaveTokens = true;
             oidcOptions.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Name;
@@ -49,7 +48,12 @@ public class Program
 
             oidcOptions.Events = new OpenIdConnectEvents
             {
-                // Add event handlers            
+                // Add event handlers
+                OnRedirectToIdentityProvider = async context =>
+                {
+                    //context.ProtocolMessage.State = "fail";
+                    await Task.CompletedTask;
+                },
                 OnMessageReceived = async context =>
                 {
                     if (!string.IsNullOrEmpty(context.ProtocolMessage.Error))
