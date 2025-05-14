@@ -2,8 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +26,8 @@ namespace IdentityExternalErrorHandling.Areas.Identity.Pages.Account
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
+
+            return SignOut(new AuthenticationProperties { RedirectUri = returnUrl }, "EntraID");
             if (returnUrl != null)
             {
                 return LocalRedirect(returnUrl);

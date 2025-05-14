@@ -1,12 +1,11 @@
 using IdentityExternalErrorHandling.Data;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace IdentityExternalErrorHandling;
 
@@ -104,6 +103,10 @@ public class Program
         });
 
         var app = builder.Build();
+
+        IdentityModelEventSource.ShowPII = true;
+        IdentityModelEventSource.LogCompleteSecurityArtifact = true;
+        JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
