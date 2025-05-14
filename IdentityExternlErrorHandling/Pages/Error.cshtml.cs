@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Diagnostics;
 
 namespace IdentityExternalErrorHandling.Pages;
 
@@ -15,7 +15,7 @@ public class ErrorModel : PageModel
 
     public void OnGet(string? remoteError)
     {
-        if (remoteError!= null)
+        if (remoteError != null)
         {
             Error = "Remote authentication error";
             ErrorDescription = remoteError;
