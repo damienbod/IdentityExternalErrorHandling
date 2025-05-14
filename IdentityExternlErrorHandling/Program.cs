@@ -84,6 +84,22 @@ public class Program
                 {
                     await Task.CompletedTask;
                 },
+                OnAuthenticationFailed = async context =>
+                {
+                    //context.HandleResponse();
+                    //context.Response.Redirect($"/Error?remoteError={context.Exception.Message}");
+                    await Task.CompletedTask;
+                },
+                OnRemoteFailure = async context =>
+                {
+                    if (context.Failure != null)
+                    {
+                        context.HandleResponse();
+                        context.Response.Redirect($"/Error?remoteError={context.Failure.Message}");
+                    }
+
+                    await Task.CompletedTask;
+                }
             };
         });
 
