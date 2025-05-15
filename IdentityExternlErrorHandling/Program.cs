@@ -65,8 +65,7 @@ public class Program
                 },
                 OnRedirectToIdentityProvider = async context =>
                 {
-                    //context.ProtocolMessage.AcrValues = "p2";
-                    //context.ProtocolMessage.State = "fail";
+                    //context.ProtocolMessage.AcrValues = "mfa";                
                     await Task.CompletedTask;
                 },
                 OnMessageReceived = async context =>
