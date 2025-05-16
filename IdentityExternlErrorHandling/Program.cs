@@ -174,7 +174,8 @@ public class Program
                 },
                 OnRedirectToIdentityProvider = async context =>
                 {
-                    context.ProtocolMessage.AcrValues = "LoA2";
+                    // Require passkeys
+                    context.ProtocolMessage.AcrValues = "LoA3";
 
                     var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
                     logger.LogInformation("OnRedirectToIdentityProvider to identity provider. Scheme: {Scheme: }", context.Scheme.Name);
