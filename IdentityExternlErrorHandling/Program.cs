@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityExternalErrorHandling;
 
@@ -123,6 +124,39 @@ public class Program
 
                     await Task.CompletedTask;
                 }
+            };
+        })
+        .AddOpenIdConnect("keycloak", "keycloak", options =>
+        {
+            options.SignInScheme = IdentityConstants.ExternalScheme;
+            options.SignOutScheme = IdentityConstants.ApplicationScheme;
+            options.RemoteSignOutPath = new PathString("/signout-callback-oidc-keycloak");
+            options.SignedOutCallbackPath = new PathString("/signout-oidc-keycloak");
+            options.CallbackPath = new PathString("/signin-oidc-keycloak");
+
+            options.Authority = builder.Configuration["AuthConfiguration:IdentityProviderUrl"];
+            options.ClientSecret = builder.Configuration["AuthConfiguration:ClientSecret"];
+            options.ClientId = builder.Configuration["AuthConfiguration:Audience"];
+            options.ResponseType = OpenIdConnectResponseType.Code;
+
+            options.Scope.Clear();
+            options.Scope.Add("openid");
+            options.Scope.Add("profile");
+            options.Scope.Add("email");
+            options.Scope.Add("offline_access");
+
+            options.ClaimActions.Remove("amr");
+            options.ClaimActions.MapJsonKey("website", "website");
+
+            options.GetClaimsFromUserInfoEndpoint = true;
+            options.SaveTokens = true;
+
+            options.PushedAuthorizationBehavior = PushedAuthorizationBehavior.Disable;
+
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                NameClaimType = "name",
+                RoleClaimType = "role",
             };
         });
 
