@@ -61,15 +61,25 @@ public class Program
                     var idToken = context.Properties!.GetTokenValue("id_token");
                     var accessToken = context.Properties!.GetTokenValue("access_token");
 
+                    var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                    logger.LogInformation("OnTicketReceived from identity provider. Scheme: {Scheme: }", context.Scheme.Name);
+
                     await Task.CompletedTask;
                 },
                 OnRedirectToIdentityProvider = async context =>
                 {
-                    //context.ProtocolMessage.AcrValues = "mfa";                
+                    //context.ProtocolMessage.AcrValues = "http://schemas.openid.net/pape/policies/2007/06/multi-factor";
+
+                    var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                    logger.LogInformation("OnRedirectToIdentityProvider to identity provider. Scheme: {Scheme: }", context.Scheme.Name);
+                    
                     await Task.CompletedTask;
                 },
                 OnMessageReceived = async context =>
                 {
+                    var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                    logger.LogInformation("OnMessageReceived from identity provider. Scheme: {Scheme: }", context.Scheme.Name);
+
                     if (!string.IsNullOrEmpty(context.ProtocolMessage.Error))
                     {
                         context.HandleResponse();
@@ -80,16 +90,25 @@ public class Program
                 },
                 OnAccessDenied = async context =>
                 {
+                    var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                    logger.LogInformation("OnAccessDenied from identity provider. Scheme: {Scheme: }", context.Scheme.Name);
+
                     await Task.CompletedTask;
                 },
                 OnAuthenticationFailed = async context =>
                 {
+                    var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                    logger.LogInformation("OnAuthenticationFailed from identity provider. Scheme: {Scheme: }", context.Scheme.Name);
+
                     //context.HandleResponse();
                     //context.Response.Redirect($"/Error?remoteError={context.Exception.Message}");
                     await Task.CompletedTask;
                 },
                 OnRemoteFailure = async context =>
                 {
+                    var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                    logger.LogInformation("OnRemoteFailure from identity provider. Scheme: {Scheme: }", context.Scheme.Name);
+
                     if (context.Failure != null)
                     {
                         context.HandleResponse();
