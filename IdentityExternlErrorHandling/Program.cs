@@ -70,6 +70,10 @@ public class Program
                 {
                     //context.ProtocolMessage.AcrValues = "http://schemas.openid.net/pape/policies/2007/06/multi-factor";
 
+                    // Require some authentication context always for this app
+                    //var claimsChallenge = "{\"id_token\":{\"acrs\":{\"essential\":true,\"value\":\"" + "C5" + "\"}}}";
+                    //context.ProtocolMessage.Parameters.Add("claims", claimsChallenge);
+
                     var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
                     logger.LogInformation("OnRedirectToIdentityProvider to identity provider. Scheme: {Scheme: }", context.Scheme.Name);
                     
