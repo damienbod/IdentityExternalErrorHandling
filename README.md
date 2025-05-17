@@ -25,3 +25,5 @@ https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-
 https://docs.duendesoftware.com/identityserver/fundamentals/openid-connect-events/
 
 https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents
+
+https://datatracker.ietf.org/doc/html/rfc9126
