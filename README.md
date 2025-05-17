@@ -21,3 +21,7 @@ Update-Database -Context ApplicationDbContext
 https://www.keycloak.org/docs/latest/server_admin/index.html#features
 
 https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-oidc-web-authentication
+
+https://docs.duendesoftware.com/identityserver/fundamentals/openid-connect-events/
+
+https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents
