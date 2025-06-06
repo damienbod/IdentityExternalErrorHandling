@@ -1,5 +1,7 @@
 # ASP.NET Core Identity External OIDC Error Handling
 
+[![.NET](https://github.com/damienbod/IdentityExternalErrorHandling/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/IdentityExternalErrorHandling/actions/workflows/dotnet.yml)
+
 [Handling OpenID Connect error events in ASP.NET Core](https://damienbod.com/2025/06/02/handling-openid-connect-error-events-in-asp-net-core/)
 
 ## Setup
