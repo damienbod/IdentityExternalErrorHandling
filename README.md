@@ -20,6 +20,7 @@ Update-Database -Context ApplicationDbContext
 
 ## History
 
+- 2025-07-02 Updates packages
 - 2025-05-31 Updated packages
 - 2025-05-17 Added LoA
 - 2025-05-14 Initial version
