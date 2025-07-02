@@ -4,6 +4,8 @@
 
 [Handling OpenID Connect error events in ASP.NET Core](https://damienbod.com/2025/06/02/handling-openid-connect-error-events-in-asp-net-core/)
 
+[Implement ASP.NET Core OpenID Connect with Keykloak to implement Level of Authentication (LoA) requirements](https://damienbod.com/2025/07/02/implement-asp-net-core-openid-connect-with-keykloak-to-implement-level-of-authentication-loa-requirements/)
+
 ## Setup
 
 ## Migrations
