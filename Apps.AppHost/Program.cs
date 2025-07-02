@@ -12,7 +12,7 @@ var keycloak = builder.AddKeycloakContainer("keycloak", userName: userName, pass
     .WithLifetime(ContainerLifetime.Persistent)
     .RunKeycloakWithHttpsDevCertificate(port: 8081);
 
-var idp = builder.AddProject<Projects.IdentityExternalErrorHandling>("idp")
+var webAppOidcClient = builder.AddProject<Projects.IdentityExternalErrorHandling>("webAppOidcClient")
     .WithExternalHttpEndpoints()
     .WithReference(keycloak)
     .WaitFor(keycloak);
